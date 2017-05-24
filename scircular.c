@@ -141,6 +141,7 @@ void deletenode(void) {
 		}
 
 		if (tmp) {
+			/* If we are deleting the only node */
 			if (tmp == last && tmp == last->link) {
 				last = NULL;
 				return;
