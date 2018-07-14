@@ -96,6 +96,27 @@ void reverse(void) {
 	return;
 }
 
+/*
+ *
+ * N1->N2->N3->N4->N5
+ *
+ * 1. STOP case : Last Node.
+ * 2. To rearrange, we need previous node and current node link while returning.
+ * 3. We need to return HEAD.
+ * 4. 
+ *
+ *
+ */
+struct node *rreverse(struct node *prev, struct node *curr)
+{
+	struct node *last;
+	if (curr == NULL)
+		return prev;	
+	last = rreverse(curr, curr->link);
+	curr->link = prev;
+        return last;
+}
+
 void deletenode(void) {
 
 	struct node *tmp, *p;
@@ -126,6 +147,23 @@ void deletenode(void) {
 	}
 
 	return;
+}
+
+struct node *rdeletenode(struct node *curr, int data)
+{
+	struct node *tmp;
+
+	if (curr == NULL)
+		return NULL;
+
+	if (curr->data == data) {
+		tmp = curr->link;
+		free(curr);
+		curr = rdeletenode(tmp, data);
+	} else {
+		curr->link = rdeletenode(curr->link, data);
+	}
+	return curr;
 }
 
 void deletelist(void) {
@@ -174,11 +212,13 @@ int main(void) {
 				printf("Done\n");
 				break;
 
-			case 5: reverse();
+			case 5: //reverse();
+				head = rreverse(NULL, head);
 				printf("Done\n");
 				break;
 
 			case 6: deletenode();
+				head = rdeletenode(head, 7);
 				printf("Done\n");
 				break;
 
