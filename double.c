@@ -108,6 +108,19 @@ void reverse(void) {
 	return;
 }
 
+struct node *rreverse(struct node *prev, struct node *curr)
+{
+	struct node *last;
+	if (curr == NULL)
+		return prev;
+	last = rreverse(curr, curr->next);
+	curr->next = prev;
+	if (prev)
+		prev->prev = curr;
+
+	return last;
+}
+
 void deletenode(void) {
 
 	int n;
@@ -185,7 +198,8 @@ int main(void) {
 				printf("Done\n");
 				break;
 
-			case 5: reverse();
+			case 5: //reverse();
+				head = rreverse(NULL, head);
 				printf("Done\n");
 				break;
 
