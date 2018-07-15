@@ -183,6 +183,17 @@ void deletelist(void) {
 	return;
 }
 
+static struct node *palindrome(struct node *p, struct node *q)
+{
+	if (q->link == NULL)
+		return q;
+	q = _palindrome(p->link, q->link->link);
+
+}
+int palindrome(struct node *head)
+{
+      return _palindrome(head, head);
+}
 int main(void) {
 	int option = 0xff;
 
@@ -226,7 +237,12 @@ int main(void) {
 				printf("Done\n");
 				break;
 
-			case 8: exit(0);
+			case 8: if (palindrome(head))
+					printf("Not Palindrome\n");
+				else
+					printf("Paalindrome\n");
+				break;
+			case 9: exit(0);
 				break;
 
 			default: ;
