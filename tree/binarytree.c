@@ -135,12 +135,55 @@ int sizeoftree(struct node *n)
 	return 1 + left + right;
 }
 
+struct node *deletelist(struct node *l)
+{
+	if (l == NULL)
+		return NULL;
+	deletelist(l->left);
+	deletelist(l->right);
+	free(l);
+	return NULL;
+}
+
+struct node *delete(struct node *n, int data)
+{
+	struct node *tmp;
+	if (n == NULL) {
+		printf("Node %d not found in the tree\n", data);
+		return NULL;
+	}
+	printf("n->data :%d data :%d\n",n->data, data);
+
+	if (data < n->data)
+		n->left = delete(n->left, data);
+	else if (data > n->data)
+		n->right = delete(n->right, data);
+	else {
+		if (n->left && n->right) {
+			tmp = n->right;
+			while(tmp->left != NULL)
+				tmp = tmp->left;
+			n->data = tmp->data;
+			n->right = delete(n->right, tmp->data);
+		} else if (n->left == NULL) {
+			tmp = n->right;
+			free(n);
+			return tmp;
+		} else if (n->right == NULL) {
+			tmp = n->left;
+			free(n);
+			return tmp;
+		}
+	}
+	return n;
+}
+
 int main(void) {
 	int option = 0xff;
 	int n = -1;
 	printf("Binary Tree  - Choose your action:\n 1.Create\n"
 			"2.display\n3. Insert\n 4.sizeoftree\n");
-	printf("5.reverse\n6.delete node\n7.delete list\n8.exit\n");
+	printf("5.deleteleftsubtree\n 9.deleterightsubtree\n 6.delete node 66.delete node(pure recursion)\n7.delete list\n8.exit\n");
 
 	while(1) {
 
@@ -158,17 +201,27 @@ int main(void) {
 				break;
 			case 4: printf("Total Number of Nodes :%d\n", sizeoftree(root));
 				break;
-			case 6: printf("Enter Node to delete :\n");
+			case 6: printf("Enter Node to delete:\n");
 				scanf("%d", &n);
 				root = deletenode(root, n);
 				printf("Done\n");
 				break;
-/*
-
-			case 7: deletelist();
+			case 66: printf("Enter Node to delete:\n");
+				scanf("%d", &n);
+				root = delete(root, n);
 				printf("Done\n");
 				break;
-*/
+
+
+			case 7: root = deletelist(root);
+				printf("Done\n");
+				break;
+			case 5: root->left = deletelist(root->left);
+				printf("Done\n");
+				break;
+			case 9: root->right = deletelist(root->right);
+				printf("Done\n");
+				break;
 			case 8: exit(0);
 				break;
 
