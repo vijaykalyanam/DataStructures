@@ -35,7 +35,8 @@ static int enqueue(struct queue *q, int data)
 
 static bool queueEmpty(struct queue *q)
 {
-	return (q->front == 0 && q->rear == q->size -1) || q->rear == q->front || q->front == -1;
+	//return (q->front == 0 && q->rear == q->size -1) || q->rear == q->front || q->front == -1;
+	return q->rear == q->front || q->front == -1;
 }
 
 static int dequeue(struct queue *q)
