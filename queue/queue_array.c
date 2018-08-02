@@ -1,31 +1,41 @@
-#include <headers.h>
-#include <stdio.h>
+#include "queue_array_headers.h"
 
-#define QLEN	64
-#define isEmpty() (head == tail)
-#define isFull()  ((head == QLEN-1) && ())
+struct Queues {
+	bool locked;
+	unsigned int len;
+	struct queue *q;
+};
 
-int main(void)
+#define MAX_QUEUES	32
+static struct Queues Q[32];
+
+unsigned int createQueue(struct queue **q, unsigned int len)
 {
-	static unsigned int head, tail;
-	unsigned int op;
-	int data;
 
-	do {
-		printf("1.list 2.pop 3.push 4.peek 5.isFull 6.isEmpty\n");
-		scanf("%d", &op);
+	int i;
 
-		switch(op) {
-
-			case 1: list(astack); break;
-			case 2: printf("popped :%d\n",pop()); break;
-			case 3: printf("enter data to push:\n");
-				scanf("%d", &data);
-				push(data); break;
-			case 4: peek(astack); break;
-			case 5: isFull(); break;
-			case 6: isEmpty(); break;
-			default: return 0;
+	for (i = 0; i < MAX_QUEUES; i++) {
+		if (!Q[i].locked) {
+			Q[i].locked = true;
+			Q[i].q = (struct queue *) malloc(len + sizeof(struct queue));
+			*q = Q[i].q;
+			Q[i].q->front = -1;
+			Q[i].q->rear = -1;
+			Q[i].q->size = len;
+			Q[i].len = len;
+			return i;
 		}
-	} while(1);
+	}
+	return -1;
+}
+
+void destroyQueue(unsigned int id)
+{
+	if (id < 0 || id > MAX_QUEUES-1) {
+		printf("Invalid Queue ID\n");
+		return;
+	}
+
+	free(Q[id].q);
+	Q[id].locked = false;
 }

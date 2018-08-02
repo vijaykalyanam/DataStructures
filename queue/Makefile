@@ -1,3 +1,5 @@
+queue_array:
+	gcc -Wincompatible-pointer-types -I. -o aqueue queue_array.c main_queue_array.c 
 stack:
 	gcc -Wincompatible-pointer-types -I. -o stack stack_array.c
 stack_linked:
