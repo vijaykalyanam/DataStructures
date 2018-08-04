@@ -1,8 +1,18 @@
 #include "queue_circular_headers.h"
-
+#if 0
 #define IsQueueFull(__q)	__q.head->link == __q.tail
 #define IsQueueEmpty(__q)	__q.head == __q.tail
+#else
+static bool IsQueueFull(const struct queue *q)
+{
+	return q->head->link == q->tail;
+}
 
+static bool IsQueueEmpty(const struct queue *q)
+{
+	return q->head == q->tail;
+}
+#endif
 static int enqueue(struct queue *q, int data)
 {
 	if (IsQueueFull(q)) {
@@ -57,12 +67,12 @@ int main(int argc, char **argp)
                         case 4: printf("Dequeue %d\n",dequeue(&q)); break;
                                 break;
                         case 5: display(&q); break; 
-                        case 6: if (IsQueueEmpty(q))
+                        case 6: if (IsQueueEmpty(&q))
                                         printf("Queue is Empty\n");
                                 else
                                         printf("Quueue is Not Empty\n");
                                 break;
-                        case 7: if (IsQueueFull(q))
+                        case 7: if (IsQueueFull(&q))
                                         printf("Queue is Full\n");
                                 else
                                         printf("Queue is not Full\n");
