@@ -1,3 +1,5 @@
+cqueue:
+	gcc -Wincompatible-pointer-types -I. -o cqueue queue_circular.c main_queue_circular.c
 queue_array:
 	gcc -Wincompatible-pointer-types -I. -o aqueue queue_array.c main_queue_array.c 
 stack:
