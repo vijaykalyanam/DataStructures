@@ -6,16 +6,19 @@ static struct node *getnode() {
 	scanf("%d", &ptr->data);
 	return ptr;
 } 
-
+/*
 int createQueue(struct queue **q, unsigned int len)
 {
 	struct node *last = NULL;
 	struct node *p;
 	int i;
 
+	if (q == NULL || *q == NULL)
+		return -1;
 	for(i=0; i<len; i++) {
 		if(last == NULL) {
-			last = getnode();
+			(*q)->last = getnode();
+			last = (*q)->last;
 			last->link = last;
 		} else {
 			p = getnode();
@@ -24,12 +27,38 @@ int createQueue(struct queue **q, unsigned int len)
 			last = last->link;
 		}
 	}
-	/* The below approach is not correct. The one should be done as seen beneath of it */
-	//*q->head = *q->tail = *q->last = last;
+	// The below approach is not correct. The one should be done as seen beneath of it
+	// Remember ETH_HDR() MACRO.
+	// *q->head = *q->tail = *q->last = last;
 	(*q)->head = (*q)->tail = (*q)->last = last;
 	return 0;
 }
+*/
+int createQueue(struct queue *q, unsigned int len)
+{
+	struct node *last = NULL;
+	struct node *p;
+	int i;
 
+	if (q == NULL)
+		return -1;
+	for(i=0; i<len; i++) {
+		if(last == NULL) {
+			q->last = getnode();
+			last = q->last;
+			last->link = last;
+		} else {
+			p = getnode();
+			p->link = last->link;
+			last->link = p;			
+			last = last->link;
+		}
+	}
+	// The below approach is not correct. The one should be done as seen beneath of it
+	//*q->head = *q->tail = *q->last = last;
+	q->head = q->tail = q->last = last;
+	return 0;
+}
 void display(struct queue *q) {
 	struct node *last = q->last;
 	struct node *p = last;

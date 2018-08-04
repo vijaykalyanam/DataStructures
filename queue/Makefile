@@ -11,5 +11,7 @@ stack_linked:
 
 clean:
 	rm -rf ./*.o
+	rm -rf cqueue 
+	rm -rf aqueue
 	rm -rf stack
 	rm -rf stack_linked

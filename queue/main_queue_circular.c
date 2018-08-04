@@ -1,7 +1,7 @@
 #include "queue_circular_headers.h"
 
-#define IsQueueFull(__q)	((__q) ? (__q->head->link == __q->tail) : (0))
-#define IsQueueEmpty(__q)	((__q) ? (__q->head == __q->tail) : (0))
+#define IsQueueFull(__q)	__q.head->link == __q.tail
+#define IsQueueEmpty(__q)	__q.head == __q.tail
 
 static int enqueue(struct queue *q, int data)
 {
@@ -34,7 +34,8 @@ int main(int argc, char **argp)
         unsigned int op;
         int data;
 
-	struct queue *q = NULL;
+	//struct queue *q = NULL; This Can't Be Pointer.
+	struct queue q = {0};
 	unsigned int ring =-1;
 
         do {     
@@ -51,11 +52,11 @@ int main(int argc, char **argp)
 			//case 2: destroyQueue(ring); break;
 			case 3: printf("Enter data to Enqueue:");
 				scanf("%d",&data);
-				enqueue(q, data);	
+				enqueue(&q, data);	
 				break;
-                        case 4: printf("Dequeue %d\n",dequeue(q)); break;
+                        case 4: printf("Dequeue %d\n",dequeue(&q)); break;
                                 break;
-                        case 5: display(q); break; 
+                        case 5: display(&q); break; 
                         case 6: if (IsQueueEmpty(q))
                                         printf("Queue is Empty\n");
                                 else
