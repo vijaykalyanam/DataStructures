@@ -1,52 +1,49 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "queue_circular_headers.h"
 
-struct node {
-	struct node *left;
-	int data;
-	struct node *right;
-}*root=NULL;
+static struct tnode *root;
 
-static struct node *getnode(void) {
-	struct node *ptr = (struct node *) calloc(1, sizeof(struct node));
+static struct tnode *gettnode(void) {
+	struct tnode *ptr = (struct tnode *) calloc(1, sizeof(struct tnode));
 /*
-	printf("enter node data:");
+	printf("enter tnode data:");
 	scanf("%d", &ptr->data);
 */
 	return ptr;
 }
 
-static struct node *__addnode(struct node *r, int data)
+static struct tnode *__addtnode(struct tnode *r, int data)
 {
-	struct node *ptr;
+	struct tnode *ptr;
 
 	if (r == NULL) {
-		ptr = getnode();
+		ptr = gettnode();
 		ptr->data = data;
 		return ptr;
 	}
 
 	if (data < r->data)
-		r->left = __addnode(r->left, data);
+		r->left = __addtnode(r->left, data);
 	else if (data > r->data)
-		r->right = __addnode(r->right, data);
+		r->right = __addtnode(r->right, data);
 	else {
 		printf("Duplicate Data !!!\n");
 		return r;
 	}
 }
 
-struct node *addnode(struct node *r)
+struct tnode *addtnode(struct tnode *r)
 {
 	int data;
 
 	printf("Enter Node Data:\n");
 	scanf("%d", &data);
 
-	return __addnode(r,data);
+	return __addtnode(r,data);
 }
 
-void display(struct node *n) {
+void display(struct tnode *n) {
 	if (n == NULL) {
 		return;
 	}
@@ -55,10 +52,10 @@ void display(struct node *n) {
 	display(n->right);
 }
 
-int __deletenode(struct node **n)
+int __deletetnode(struct tnode **n)
 {
 	int curr, next;
-	struct node *p = *n;
+	struct tnode *p = *n;
 
 	curr = p->data;
 
@@ -68,11 +65,11 @@ int __deletenode(struct node **n)
 		return curr; 
 	}
 
-	p->data =  __deletenode(&p->left);
+	p->data =  __deletetnode(&p->left);
 	return curr;
 }
 
-struct node *deletenode(struct node *n, int data)
+struct tnode *deletetnode(struct tnode *n, int data)
 {
 
 	if (n == NULL) {
@@ -83,10 +80,10 @@ struct node *deletenode(struct node *n, int data)
 	if (n->data == data) {
 
 		if (n->left) {
-			n->data = __deletenode(&n->left);
+			n->data = __deletetnode(&n->left);
 			return n;
 		} else if (n->right) {
-			n->data = __deletenode(&n->right);
+			n->data = __deletetnode(&n->right);
 			return n;
 		} else {
 			free(n);
@@ -95,30 +92,30 @@ struct node *deletenode(struct node *n, int data)
 	}
 
 	if (data < n->data)
-		n->left = deletenode(n->left, data);
+		n->left = deletetnode(n->left, data);
 	else
-		n->right = deletenode(n->right, data);
+		n->right = deletetnode(n->right, data);
 }
 
-struct node *createbst(struct node *n)
+struct tnode *createbst(struct tnode *n)
 {
 
 	int i;
 	int a[] = {9,3,2,4,15,12,18};
 
 	if (n != NULL) {
-		printf("Root node is not empty, Must be using someone. Aborting ...\n");
+		printf("Root tnode is not empty, Must be using someone. Aborting ...\n");
 		return n;
 	}
 
 	for (i = 0; i < 7; i++) {
-		n = __addnode(n, a[i]);
+		n = __addtnode(n, a[i]);
 	}
 
 	return n;
 }
 
-int sizeoftree(struct node *n)
+int sizeoftree(struct tnode *n)
 {
 	int left, right;
 
@@ -135,7 +132,7 @@ int sizeoftree(struct node *n)
 	return 1 + left + right;
 }
 
-struct node *deletelist(struct node *l)
+struct tnode *deletelist(struct tnode *l)
 {
 	if (l == NULL)
 		return NULL;
@@ -145,9 +142,9 @@ struct node *deletelist(struct node *l)
 	return NULL;
 }
 
-struct node *delete(struct node *n, int data)
+struct tnode *delete(struct tnode *n, int data)
 {
-	struct node *tmp;
+	struct tnode *tmp;
 	if (n == NULL) {
 		printf("Node %d not found in the tree\n", data);
 		return NULL;
@@ -178,13 +175,71 @@ struct node *delete(struct node *n, int data)
 	return n;
 }
 
+static int swap(struct tnode *n)
+{
+	int left;
+	int right;
+
+	if (n == NULL) {
+		return 0;
+	}
+
+	left = swap(n->left);
+	right = swap(n->right);
+	if (left && right) {
+		n->left->data = right;
+		n->right->data = left;
+	}
+	return n->data;
+}
+
+static void mirror(struct tnode *n)
+{
+	struct tnode *left;
+	struct tnode *right;
+
+	if (n == NULL)
+		return;
+
+	left = n->left;
+	right = n->right;
+
+	n->right = left;
+	n->left = right;
+	mirror(n->left);
+	mirror(n->right);
+}
+static void printLevelOrder(struct tnode *n)
+{
+
+	struct queue q = {0};
+	struct tnode *tmp;
+
+	createQueue(&q, 15);
+
+	Enqueue(n,&q);
+
+	while(!IsQueueEmpty(&q)) {
+		tmp = Dequeue(&q);
+		printf("%d ", tmp->data);
+		if (tmp->left)
+			Enqueue(tmp->left, &q);
+
+		if (tmp->right)
+			Enqueue(tmp->right, &q);
+	}
+
+}
+
 int main(void) {
 	int option = 0xff;
 	int n = -1;
 	printf("Binary Tree  - Choose your action:\n 1.Create\n"
 			"2.display\n3. Insert\n 4.sizeoftree\n");
-	printf("5.deleteleftsubtree\n 9.deleterightsubtree\n 6.delete node 66.delete node(pure recursion)\n7.delete list\n8.exit\n");
+	printf("5.deleteleftsubtree\n 9.deleterightsubtree\n 6.delete tnode\n"
+			"66.delete tnode(pure recursion)\n7.delete list\n8.exit\n 11.swap child\n 12.Mirrors\n 13.LevelOrder");
 
+	struct queue q = {0};
 	while(1) {
 
 		printf("Enter your option:");
@@ -197,13 +252,13 @@ int main(void) {
 			case 2: display(root);
 				printf("Done\n");
 				break;
-			case 3: root = addnode(root);
+			case 3: root = addtnode(root);
 				break;
 			case 4: printf("Total Number of Nodes :%d\n", sizeoftree(root));
 				break;
 			case 6: printf("Enter Node to delete:\n");
 				scanf("%d", &n);
-				root = deletenode(root, n);
+				root = deletetnode(root, n);
 				printf("Done\n");
 				break;
 			case 66: printf("Enter Node to delete:\n");
@@ -224,6 +279,13 @@ int main(void) {
 				break;
 			case 8: exit(0);
 				break;
+
+			case 11:	swap(root);
+					break;
+			case 12:	mirror(root);
+					break;
+			case 13: printLevelOrder(root);
+				 break;
 
 			default: ;
 		}
