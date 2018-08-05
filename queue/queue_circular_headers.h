@@ -10,7 +10,7 @@ struct node {
 struct queue {
 	struct node *head;
 	struct node *tail;
-	/* Optional */
+	// Optional
 	struct node *last;
 };
 int createQueue(struct queue *q, unsigned int len);
