@@ -175,6 +175,26 @@ struct tnode *delete(struct tnode *n, int data)
 	return n;
 }
 
+static int height(struct tnode *n)
+{
+
+	int left;
+	int right;
+
+	if (n == NULL)
+		return 0;
+
+	left = height(n->left);
+	right = height(n->right);
+
+	if (left == 0 && right == 0)
+		return 1;
+
+	if (left <= right)
+		return 1+left;
+	else
+		return 1+right;
+}
 static int swap(struct tnode *n)
 {
 	int left;
@@ -231,6 +251,27 @@ static void printLevelOrder(struct tnode *n)
 
 }
 
+static int printMax(struct tnode *n)
+{
+
+	int left;
+	int right;
+
+	if (n == NULL)
+		return 0;
+
+	left = printMax(n->left);
+	right = printMax(n->right);
+
+	if (left == 0 && right == 0)
+		return n->data;
+
+	if (left > right)
+		return left;
+	else if (left < right)
+		return right;
+}
+
 int main(void) {
 	int option = 0xff;
 	int n = -1;
@@ -285,6 +326,8 @@ int main(void) {
 			case 12:	mirror(root);
 					break;
 			case 13: printLevelOrder(root);
+				 printf("Maximum :%d\n", printMax(root));
+				 printf("Height :%d\n", height(root));
 				 break;
 
 			default: ;
