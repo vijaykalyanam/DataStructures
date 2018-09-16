@@ -166,6 +166,56 @@ struct node *rdeletenode(struct node *curr, int data)
 	return curr;
 }
 
+struct node *rfdeletenode(struct node *curr, int data)
+{
+	if (curr == NULL)
+		return NULL;
+
+	if (curr->data == data) {
+		struct node *tmp = curr->link;
+		free(curr);
+		return tmp;
+	}
+	curr->link = rfdeletenode(curr->link, data);
+	return curr;
+}
+
+struct node *rdeletenodeall(struct node *curr, int data)
+{
+
+	if (curr == NULL)
+		return NULL;
+	curr->link = rdeletenodeall(curr->link, data);
+
+	if (curr->data == data) {
+		struct node *tmp = curr->link;
+		free(curr);
+		return tmp;
+	}
+
+	return curr;
+}
+
+struct node *rldeletenode(struct node *curr, int data)
+{
+
+	static int done;
+
+	if (curr == NULL)
+		return NULL;
+
+	curr->link = rldeletenode(curr->link, data);
+
+	if (!done && curr->data == data) {
+		struct node *tmp = curr->link;
+		free(curr);
+		done = 1;
+		return tmp;
+	}
+
+	return curr;
+}
+
 void deletelist(void) {
 
 	struct node *tmp, *p;
@@ -183,6 +233,7 @@ void deletelist(void) {
 	return;
 }
 
+/*
 static struct node *palindrome(struct node *p, struct node *q)
 {
 	if (q->link == NULL)
@@ -194,6 +245,8 @@ int palindrome(struct node *head)
 {
       return _palindrome(head, head);
 }
+*/
+
 int main(void) {
 	int option = 0xff;
 
@@ -228,20 +281,52 @@ int main(void) {
 				printf("Done\n");
 				break;
 
-			case 6: deletenode();
-				head = rdeletenode(head, 7);
-				printf("Done\n");
+			case 6: //deletenode();
+				/*
+				 * single.c: In function ‘main’:
+				 * single.c:286:5: error: a label can only be part of a statement and a declaration is not a statement
+				 * int d;
+				 * ^
+				 * single.c:287:5: error: expected expression before ‘int’
+				 * int op;
+				 * ^
+				 * single.c:291:18: error: ‘op’ undeclared (first use in this function)
+				 * scanf("%d", &op);
+				 *
+				 */
+				/*
+				 *
+				 *
+				 *  int d;
+				 *  int op;
+				 */
+				{
+					int d;
+					int op;
+					printf("Enter node to Delete :\n");
+					scanf("%d", &d);
+					printf("Do you want to remove all or first occurence: 1 - remove all 0 first occurance 2 last occur\n");
+					scanf("%d", &op);
+					if (op == 0)
+						head = rfdeletenode(head, d);
+					else if (op == 1)
+						head = rdeletenodeall(head, d);
+					else if (op == 2)
+						head = rldeletenode(head, d);
+					printf("Done\n");
+				}
 				break;
 
 			case 7: deletelist();
 				printf("Done\n");
 				break;
-
+/*
 			case 8: if (palindrome(head))
 					printf("Not Palindrome\n");
 				else
 					printf("Paalindrome\n");
 				break;
+*/
 			case 9: exit(0);
 				break;
 
