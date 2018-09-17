@@ -101,7 +101,8 @@ void reverse(void) {
 		q->prev = q->next;
 		q->next = p;
 		p = q;
-		q = p->prev;
+		//q = p->prev;
+		q = q->prev;
 	}
 
 	head = p;
