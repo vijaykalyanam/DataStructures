@@ -10,6 +10,7 @@ int isEmpty(struct node *top)
 
 void list(struct node *top)
 {
+	samples();
 
 	if (isEmpty(top)) {
 		printf("List is Empty\n");

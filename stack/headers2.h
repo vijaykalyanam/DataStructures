@@ -9,6 +9,24 @@ struct node {
 	struct node *next;
 };
 
+#ifndef INLINED
+#define INLINED
+inline void sample2(void)
+{
+	if (1)
+		printf("Extern inline\n");
+
+}
+#endif
+
+static inline void samples(void)
+{
+	if (1)
+		printf("static inline header file\n");
+
+}
+
+//extern inline void sample2(void);
 int peek(struct node *);
 struct node* push(struct node *);
 int pop(struct node **);

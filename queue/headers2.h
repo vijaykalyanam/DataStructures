@@ -13,3 +13,13 @@ int peek(struct node *);
 struct node* push(struct node *);
 int pop(struct node **);
 void list(struct node *);
+
+static inline int getdata(void)
+{
+	return 0;
+}
+
+inline int getdata2(void)
+{
+	return 0;
+}

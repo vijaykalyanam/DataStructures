@@ -1,6 +1,21 @@
 #include <headers2.h>
 #include <stdio.h>
 
+static inline void sample(void)
+{
+	printf("Stack static inline\n");
+	if (1)
+		do { } while(0);
+}
+
+extern inline void sample2(void);
+extern inline void sample3(void)
+{
+	printf("extern inline in same file\n");
+	if (1)
+		do { } while(0);
+}
+
 int main(void)
 {
 
@@ -26,7 +41,12 @@ int main(void)
 				else
 					printf("stack is not empty\n");
 				break;
-			default: return 0;
+			default:
+				sample();
+				sample2();
+				sample3();
+				samples();
+				return 0;
 		}
 	} while(1);
 }
